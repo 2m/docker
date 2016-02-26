@@ -62,7 +62,7 @@ case "$(uname -m)" in
 		PACMAN_EXTRA_PKGS='archlinuxarm-keyring'
 		EXPECT_TIMEOUT=120
 		ARCH_KEYRING=archlinuxarm
-		DOCKER_IMAGE_NAME=archlinuxarm
+		DOCKER_IMAGE_NAME=$(uname -m)-archlinux
 		;;
 	*)
 		PACMAN_CONF='./mkimage-arch-pacman.conf'
@@ -73,6 +73,20 @@ case "$(uname -m)" in
 		DOCKER_IMAGE_NAME=archlinux
 		;;
 esac
+
+case "$(uname -m)" in
+        armv6*)
+                PACMAN_ARCH=armv6h
+                ;;
+        armv7*)
+                PACMAN_ARCH=armv7h
+                ;;
+        *)
+                PACMAN_ARCH=arm
+                ;;
+esac
+
+sed s/%ARCH%/$PACMAN_ARCH/g mkimage-archarm-pacman.conf.template > mkimage-archarm-pacman.conf
 
 export PACMAN_MIRRORLIST
 
